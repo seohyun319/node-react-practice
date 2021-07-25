@@ -2,10 +2,13 @@ const express = require('express') //express 모듈 가져옴
 const app = express()
 const port = 5000
 const bodyParser = require('body-parser');
+
+const config = require('./config/key');
+
 const { User } = require("./models/User");
 
 const mongoose = require('mongoose')
-mongoose.connect('mongodb+srv://seohyun:7265tjgus@cluster0.ixnrt.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', {
+mongoose.connect(config.mongoURI, {
     useNewUrlParser: true, useUnifiedTopology:true, useCreateIndex:true, useFindAndModify:false
 }).then(() => console.log('MongoDB Connected...'))
   .catch(err => console.log(err))
