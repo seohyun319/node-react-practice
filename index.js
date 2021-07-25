@@ -2,6 +2,7 @@ const express = require('express') //express 모듈 가져옴
 const app = express()
 const port = 5000
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 
 const config = require('./config/key');
 
@@ -18,6 +19,8 @@ app.use(bodyParser.urlencoded({extended:true}));
 
 app.use(bodyParser.json());
 //application/json 가져옴
+app.use(cookieParser());
+
 
 app.get('/', (req, res) => {
   res.send('Hello World! 안녕하세요! 반가워요!')
@@ -53,9 +56,13 @@ app.post('/login', (req, res) => {
       
       //3. 비밀번호까지 같다면 token을 생성
       user.generateToken((err,user) => {
-
+        if(err) return res.status(400).send(err); //status 400은 에러
+        //토큰을 저장한다. 어디에? 쿠키, 로컬 스토리지... 근데 여기선 쿠키로 함
+        //쿠키쓰려면 쿠키파서 깔아야함.
+          res.cookie("x_auth", user.token) //쿠키에 유저 토큰이 x_auth라는 이름으로(아무이름이나 해도 상관x) 들어감
+            .status(200) //성공
+            .json({loginSuccess: true, userId:user._id})
       })
-
     } )
   })
 })
