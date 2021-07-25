@@ -84,6 +84,17 @@ app.get('api/users/auth', auth, (req, res) => {
   })
 })
 
+app.get('api/users/logout', auth, (req,res) => {
+  //로그아웃하려는 거면 로그인돼있는 상태인 거니까 auth 미들웨어 넣어줌
+  User.findOneAndUpdate({_id:req.user._id}, 
+    {token:""}
+    , (err, user) => {
+      if(err) return res.json({success: false, err});
+      return res.status(200).send({
+        success:true
+      })
+    })
+})
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
