@@ -25,6 +25,10 @@ app.get('/', (req, res) => {
   res.send('Hello World! 안녕하세요! 반가워요!')
 })
 
+app.get('/api/hello', (req, res) => {
+  res.send('Hello World!')
+})
+
 app.post('api/users/register', (req, res) => { //라우트에 엔드 포인트는 register. 
     //콜백펑션을 request, response
     //회원가입할 때 필요한 정보들을 client에서 가져오면 그것들을 DB에 넣어준다
