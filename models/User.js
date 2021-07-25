@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
-const saltRounds = 10
+const saltRounds = 10 //salt가 몇글자인지 나타냄
 
 const userSchema = mongoose.Schema({
     name: {
@@ -47,8 +47,19 @@ userSchema.pre('save', function(next) {//mongoose에서 가져온 메소드. use
                 next()
             })
         })
+    } else { //다른 거 바꿀 땐 그냥 next 해줘야 빠져나올 수 있음
+        next()
     }
 })
+
+userSchema.methods.comparePassword = function(plainPassword, cd) {
+    //plainPassword (1234567)와 db에 있는 암호화된 비밀번호가 같은지 체크. 
+    //복호화 불가능해서 plain을 암호화한 후 암호화 결과가 같은지 비교함
+    bcrypt.compare(plainPassword, this.password, function(err, isMatch) {
+        if(err) return cb(err),  //cb는 콜백
+        cb(null, isMatch) //암호화 결과 같으면 에러는 없고 isMatch(비밀번호는 같다) 리턴
+    })
+}
 
 
 const User = mongoose.model('User', userSchema)  //모델로 스키마 감싸줌
