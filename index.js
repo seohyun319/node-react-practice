@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 //application/json 가져옴
 
 app.get('/', (req, res) => {
-  res.send('Hello World!')
+  res.send('Hello World! 안녕하세요! 반가워요!')
 })
 
 app.post('/register', (req, res) => { //라우트에 엔드 포인트는 register. 
