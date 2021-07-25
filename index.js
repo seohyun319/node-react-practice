@@ -3,9 +3,8 @@ const app = express()
 const port = 5000
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-
 const config = require('./config/key');
-
+const { auth } = require("./middleware/auth");
 const { User } = require("./models/User");
 
 const mongoose = require('mongoose')
@@ -26,7 +25,7 @@ app.get('/', (req, res) => {
   res.send('Hello World! 안녕하세요! 반가워요!')
 })
 
-app.post('/register', (req, res) => { //라우트에 엔드 포인트는 register. 
+app.post('api/users/register', (req, res) => { //라우트에 엔드 포인트는 register. 
     //콜백펑션을 request, response
     //회원가입할 때 필요한 정보들을 client에서 가져오면 그것들을 DB에 넣어준다
 
@@ -39,7 +38,7 @@ app.post('/register', (req, res) => { //라우트에 엔드 포인트는 registe
     })
 })
 
-app.post('/login', (req, res) => {
+app.post('api/users/login', (req, res) => {
   //1. 데이터베이스에서 요청한 email 찾기:
   User.findOne({email:req.body.email}, (err, user) => {
     if(!user) {
@@ -66,6 +65,25 @@ app.post('/login', (req, res) => {
     } )
   })
 })
+
+app.get('api/users/auth', auth, (req, res) => {
+  //미들웨어 auth는 auth.js의 let auth에서 가져옴.
+  //여기까지 미들웨어를 통과해왔다는 얘기는 Authentication이 true라는 말.
+  res.status(200).json({
+    //유저 정보 전달
+    _id:req.user._id,
+    isAdmin: req.user.role === 0 ? false : true,
+    //role이 0 : 일반유저. role이 0이 아님: 관리자
+    //이건 무조건은 아님. 설정하기 나름.
+    isAuth:true,
+    email:req.user.email,
+    name:req.user.name,
+    lastname:req.user.lastname,
+    role:req.user.role,
+    image:req.user.image,    
+  })
+})
+
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
