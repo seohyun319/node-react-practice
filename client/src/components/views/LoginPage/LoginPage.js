@@ -6,7 +6,7 @@ import { loginUser } from '../../../_actions/user_action';
 function LoginPage(props) {
     const dispatch = useDispatch();
 
-    const [Email, setEmail] = useState("")
+    const [Email, setEmail] = ubvseState("")
     const [Password, setPassword] = useState("")
     //usestate 치면 자동완성
 
