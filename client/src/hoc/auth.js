@@ -17,16 +17,17 @@ export default function (SpecificComponent, option, adminRoute = null) {
                 console.log(response)
                 //로그인 하지 않은 상태 
                 if (!response.payload.isAuth) {
-                    if (option) {
+                    if (option) { //===true
                         props.history.push('/login')
                     }
                 } else {
                     //로그인 한 상태 
                     if (adminRoute && !response.payload.isAdmin) {
-                        props.history.push('/')
+                        //admin이 아닌데 admin만 들어갈 수 있는 곳 가려고 하면
+                        props.history.push('/') //랜딩 페이지로 보내줌
                     } else {
-                        if (option === false)
-                            props.history.push('/')
+                        if (option === false) //로그인한 유저가 출입 불가능한 페이지에 들어가려고 하면
+                            props.history.push('/') //랜딩 페이지로
                     }
                 }
             })
